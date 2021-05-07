@@ -1,0 +1,108 @@
+.ms-Fabric {
+  font-family: "Montserrat", sans-serif;
+}
+
+.ms-FocusZone {
+  background-color: $color-secondary-4;
+  // :hover {
+  //   border-radius: 10px;
+  //   background-color: $color-primary-1;
+  //   color: $color-primary-3;
+  // }
+}
+
+.ms-OverflowSet-item {
+  background-color: $color-secondary-4;
+  // :hover {
+  //   background-color: $color-primary-1;
+  //   color: $color-primary-3;
+  // }
+}
+
+.ms-Button {
+  border-radius: 10px;
+  background-color: $color-secondary-4;
+  color: $color-secondary-1;
+  :hover {
+    border-radius: 10px;
+    background-color: $color-primary-1;
+    color: $color-primary-3;
+    transition: background-color 1s ease, color 1s ease;
+    -webkit-transition: background-color 1s ease color 1s ease;
+    -moz-transition: background-color 1s ease, color 1s ease;
+    -o-transition: background-color 1s ease, color 1s ease;
+  }
+}
+
+// .ms-Button-flexContainer {
+//   background-color: $color-secondary-4;
+//   color: $color-secondary-1;
+//   :hover {
+//     background-color: $color-primary-1;
+//     color: $color-primary-3;
+//     transition: background-color 1s ease, color 1s ease;
+//     -webkit-transition: background-color 1s ease color 1s ease;
+//     -moz-transition: background-color 1s ease, color 1s ease;
+//     -o-transition: background-color 1s ease, color 1s ease;
+//   }
+// }
+
+.root-55:hover .ms-Button-icon {
+  color: $color-primary-3 !important;
+}
+
+.ms-SearchBox {
+  border-radius: 10px;
+  border-color: $color-primary-3;
+  background-color: $color-primary-3;
+  :hover {
+    border-radius: 10px;
+    border-color: $color-primary-3;
+  }
+  :active {
+    border-radius: 10px;
+    border-color: $color-primary-3;
+  }
+}
+
+.ms-Button-icon {
+  color: $color-icon;
+  // :hover {
+  //   color: $color-primary-3 !important;
+  //   font-weight: bold;
+  // }
+  // :active {
+  //   color: $color-primary-3 !important;
+  //   font-weight: bold;
+  // }
+}
+
+.header-buttons > .ms-Button {
+  height: 50px;
+}
+
+.sidebar-buttons > .ms-Button {
+  height: 50px;
+}
+
+.ms-SearchBox-icon {
+  color: $color-icon;
+}
+
+.ms-Persona-primaryText {
+  color: $color-secondary-1;
+}
+
+.ms-Dialog-main {
+  border-radius: 10px;
+}
+
+.ms-List {
+  border-radius: 10px;
+  background-color: $color-secondary-3;
+  color: $color-secondary-1;
+}
+
+.ms-GroupHeader {
+  background-color: $color-secondary-3;
+}

@@ -1,0 +1,29 @@
+table.dataTable.display tbody {
+  tr.even {
+    background-color: $color-secondary-3 !important;
+  }
+
+  tr.odd {
+    background-color: $color-secondary-4 !important;
+  }
+
+  tr.hover {
+    background-color: $color-secondary-1 !important;
+  }
+
+  tr.selected {
+    background-color: $color-secondary-1 !important;
+  }
+
+  td.selected {
+    background-color: $color-secondary-1 !important;
+  }
+
+  tr.odd.selected {
+    background-color: $color-secondary-1 !important;
+  }
+
+  tr.even.selected {
+    background-color: $color-secondary-1 !important;
+  }
+}
