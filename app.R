@@ -4,10 +4,16 @@ library(shiny.react)
 library(shiny.router)
 library(shinyjs)
 library(sass)
-library(purrr)
 library(R6)
 library(owmr)
-options(shiny.launch.browser = TRUE)
+library(purrr)
+library(DT)
+library(glue)
+library(dplyr)
+library(dbplyr)
+library(leaflet)
+
+options(box.path = getwd())
 
 box::use(
   modules/header,
@@ -25,8 +31,6 @@ box::reload(info)
 box::reload(search_modal)
 box::reload(home)
 
-source("modules/data_manager.R")
-
 router <- make_router(
   route("home", home$ui("home")),
   route("info", info$ui("info"), info$server),
@@ -35,16 +39,20 @@ router <- make_router(
 
 addResourcePath("www", "./www")
 sass(sass_file("styles/main.scss"), output = "www/style.css", cache = FALSE)
+source("modules/data_manager.R")
 
 # data_manager <- DataManager$new("data/plants.sqlite")
-# res <- data_manager$search("rhipsalis")
-# data_manager$add(c("101119", "174297", "295307"))
-# data_manager$get_plants()
+# res <- data_manager$search("syngonium")
+# data_manager$add("295307")
+# data_manager$add("101119")
+# data_manager$add("186087")
+# data_manager$get()
 
 ui <- fluentPage(
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "www/style.css"),
-    tags$script(src = "www/script.js")
+    tags$script(src = "www/script.js"),
+    tags$link(rel="shortcut icon", href="www/favicon.ico")
   ),
   suppressDependencies("bootstrap"),
   useShinyjs(),
@@ -54,7 +62,6 @@ ui <- fluentPage(
       class = "grid-container",
       div(class = "header", header$ui()),
       div(class = "sidebar", 
-        sidebar$ui("sidebar"),
         div(
           class = "sidebar-buttons",
           ActionButton.shinyInput(
@@ -69,9 +76,10 @@ ui <- fluentPage(
             iconProps = list(iconName = "Remove"),
             styles = list("width: 100px")
           )
-        )
-        # Separator("dev"),
-        # ActionButton.shinyInput("add_plant", text = "add")
+        ),
+        sidebar$ui("sidebar"),
+        Separator("dev"),
+        ActionButton.shinyInput("add_plant", text = "add")
       ),
       div(class = "main", router$ui)
     )
@@ -96,13 +104,14 @@ server <- function(input, output, session) {
   })
   
   observeEvent(input$remove, {
+    if (session$userData$data_manager()$empty()) return()
     session$userData$data_manager()$remove(session$userData$selected())
   })
   
   observeEvent(input$add_plant, {
-    session$userData$data_manager()$add(c("101119", "174297", "295307"))
+    ids <- session$userData$data_manager()$search("syngonium")$id[1:15]
+    session$userData$data_manager()$add(ids)
   })
 }
 
 shinyApp(ui = ui, server = server)
-

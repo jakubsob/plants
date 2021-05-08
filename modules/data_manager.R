@@ -3,7 +3,6 @@ DataManager <- R6Class(
   private = list(
     con = NULL,
     plants = NULL,
-    search_cols = c("scientific_name", "genus"),
     reactiveDep = NULL,
     reactiveExpr = NULL,
     invalidate = function() {
@@ -13,18 +12,12 @@ DataManager <- R6Class(
     },
     count = 0,
     clean_plant = function(plant) {
-      plant <- plant[, -1]
-      clean = function(x) {
-        ifelse(x == "false", FALSE, ifelse(x == "true", TRUE, x))
-      }
-      
+      p <- plant[, -1]
       split <- function(x) {
         res <- strsplit(x, ",")[[1]]
         if (length(res) == 0) return(NA)
         res
       }
-      # browser()
-      p <- map(plant, clean)
       new_p <- list(
         vegetable = p$vegetable,
         synonyms = split(p$synonyms),
@@ -45,11 +38,11 @@ DataManager <- R6Class(
         growth = list(
           form = p$growth_form,
           habit = p$growth_habit,
-          months = p$growth_months,
           rate = p$growth_rate,
-          average_height = p$average_height_cm,
-          maximum_height = p$maximum_height_cm,
-          minimum_height = p$minimum_height
+          average_height_cm = p$average_height_cm,
+          maximum_height_cm = p$maximum_height_cm,
+          minimum_root_depth_cm = p$minimum_root_depth_cm,
+          bloom_months = p$bloom_months
         ),
         edible = list(
           is_edible = p$edible,
@@ -63,22 +56,19 @@ DataManager <- R6Class(
           humidity = p$atmospheric_humidity,
           ph_minimum = p$ph_minimum,
           ph_maximum = p$ph_maximum,
-          minimum_root_depth = p$minimum_root_depth_cm,
-          days_to_harvest = p$planting_day_to_harvest,
+          minimum_root_depth_cm = p$minimum_root_depth_cm,
+          days_to_harvest = p$planting_days_to_harvest,
           description = p$planting_description,
           sowing = p$planting_sowing_description,
-          row_spacing = p$planting_row_spacing,
+          row_spacing_cm = p$planting_row_spacing_cm,
           spread = p$planting_spread_cm
         ),
         links = list(
           usda = p$url_usda,
           tropicos = p$url_tropicos,
-          tela_botanica = p$url_tela_botanica,
           powo = p$url_powo,
           plantnet = p$url_plantnet,
           gbif = p$url_gbif,
-          openfarm = p$url_openfarm,
-          catminat = p$url_catminat,
           wikipedia = p$url_wikipedia_en
         )
       )
@@ -91,7 +81,7 @@ DataManager <- R6Class(
   public = list(
     initialize = function(db) {
       con <- DBI::dbConnect(RSQLite::SQLite(), db)
-      private$con <- dplyr::tbl(con, "plants")
+      private$con <- tbl(con, "plants")
       
       private$plants <- list()
       private$reactiveDep <- function(x) NULL
@@ -109,34 +99,41 @@ DataManager <- R6Class(
     },
     
     search = function(query) {
-      box::use(purrr[map])
-      query <- glue::glue("%{query}%")
+      query <- glue("%{query}%")
       result <- private$con %>% 
-        dplyr::filter(
+        filter(
           scientific_name %like% query |
           genus %like% query |
           common_name %like% query
         ) %>% 
-        dplyr::collect()
+        collect()
     },
     
     add = function(id) {
       id <- id[!id %in% names(private$plants)]
       walk(id, function(i) {
-        plant <- private$con %>% dplyr::filter(id == i) %>% dplyr::collect()
-        private$plants[[as.character(i)]] <- private$clean_plant(plant)
+        private$plants[[as.character(i)]] <- private$con %>%
+          filter(id == i) %>%
+          collect() %>%
+          private$clean_plant() 
       })
       private$invalidate()
     },
     
     remove = function(id) {
+      if (length(id) != 1) stop("Can only remove one element at a time")
       private$plants[[id]] <- NULL
       private$invalidate()
     },
     
-    get_plants = function(id = NULL) {
+    get = function(id = NULL) {
       if (is.null(id)) return(private$plants)
-      private$plants[id]
+      if (length(id) != 1) stop("Can only retrieve one element")
+      private$plants[[id]] 
+    },
+    
+    empty = function() {
+      length(private$plants) == 0
     }
   )
 )

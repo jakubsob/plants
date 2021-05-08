@@ -39,7 +39,7 @@ ui <- function(id) {
   ns <- NS(id)
   # reactOutput(ns("scrollable"))
   tagList(
-    DTOutput(ns("scrollable"))
+    DTOutput(ns("scrollable"), height = "100%")
   )
 }
 
@@ -69,7 +69,7 @@ server <- function(id) {
     # })
 
     output$scrollable <- renderDT({
-      items <- data_manager()$get_plants() %>% 
+      items <- data_manager()$get() %>% 
         map(`[[`, "scientific_name") %>%
         unlist() %>% 
         as.data.frame()
@@ -81,7 +81,8 @@ server <- function(id) {
         rownames = FALSE,
         options = list(
           dom = "t",
-          scrollY = "50vmin",
+          paging = FALSE,
+          scrollY = "80vmin",
           searching = FALSE,
           headerCallback = JS(
             "function(thead, data, start, end, display){",
@@ -95,13 +96,8 @@ server <- function(id) {
       )
     })
     
-    observeEvent(input$scrollable_personas_active, {
-      print(input$scrollable_personas_active)
-    })
-    
     observeEvent(input$scrollable_rows_selected, {
-      
-      items <- data_manager()$get_plants()
+      items <- data_manager()$get()
       ids(names(items[input$scrollable_rows_selected]))
     })
     

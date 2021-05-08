@@ -8,7 +8,7 @@ box::use(
 #' @export
 card <- function(title, content, size = 12, style = "") {
   div(
-    class = glue("card ms-depth-8 ms-sm{size} ms-xl{size}"),
+    class = glue("card ms-depth-16 ms-sm{size} ms-xl{size}"),
     style = style,
     Stack(
       tokens = list(childrenGap = 5),

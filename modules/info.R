@@ -25,17 +25,12 @@ server <- function(info_id) {
     selected <- session$userData$selected
     
     output$info <- renderReact({
-      # req(selected(), data_manager()$get_plants())
-      # if (length(data_manager()$get_plants()) == 0) {
-      #   card <- ui_utils$card("Empty", "Add plants using sidebar menu first.")
-      #   return(card)
-      # } 
+      req(!data_manager()$empty())
       if (length(selected()) != 1) {
         card <- ui_utils$card("Empty", "Select a plant from sidebar menu.")
         return(card)
       }
-      plant <- data_manager()$get_plants()[[selected()]]
-      # plant <- data_manager$get_plants()[[1]]
+      plant <- data_manager()$get(selected())
       
       tagList(
         ui_utils$card(
@@ -78,11 +73,25 @@ make_title <- function(plant) {
   )
 }
 
-make_info_list <- function(plant) {
-  # plant <- data_manager$get_plants()[[1]]
-  # groups <- c("links")
-  groups <- c("foliage", "flower", "fruit", "growth", "edible", "planting", "links")
-  items <- plant[groups]
+make_items <- function(items) {
+  imap(items, function(item, key) {
+    if (!is.null(item) && grepl("^http", item)) item <- Link(item)
+    span(strong(key_to_word(key)), ": ", item)
+  })
+}
+
+key_to_word <- function(key) {
+  key <- strsplit(key, "_")[[1]] %>% 
+    stringr::str_to_title() %>% 
+    glue::glue_collapse(sep = " ")
+}
+
+make_info_list <- function(plant, groups = c("foliage", "flower", "fruit", "growth", "edible", "planting", "links")) {
+  # plant <- data_manager$get()[[1]]
+  items <- plant[groups] %>% 
+    map(function(x) keep(x, ~ !is.na(.x))) %>% 
+    compact()
+  groups <- names(items)
   counts <- unname(map_int(items, length))
   starts <- cumsum(counts) - counts
   items <- purrr::flatten(items) %>% make_items() %>% unname()
@@ -104,19 +113,6 @@ make_info_list <- function(plant) {
     onRenderCell = JS("(depth, item) => 
       React.createElement('span', { style: { paddingLeft: 49 } }, item)")
   )
-}
-
-make_items <- function(items) {
-  imap(items, function(item, key) {
-    if (!is.null(item) && grepl("^http", item)) item <- Link(item)
-    span(strong(key_to_word(key)), ": ", item)
-  })
-}
-
-key_to_word <- function(key) {
-  key <- strsplit(key, "_")[[1]] %>% 
-    stringr::str_to_title() %>% 
-    glue::glue_collapse(sep = " ")
 }
 
 

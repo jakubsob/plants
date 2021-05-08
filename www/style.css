@@ -3,52 +3,28 @@
   font-family: "Montserrat", sans-serif;
 }
 
-.ms-FocusZone {
-  background-color: #f8ece0;
-}
-
-.ms-OverflowSet-item {
-  background-color: #f8ece0;
-}
-
 .ms-Button {
-  border-radius: 10px;
-  background-color: #f8ece0;
-  color: #182c2b;
+  border-radius: 10px !important;
+  background-color: #f8ece0 !important;
+  color: #182c2b !important;
 }
 
 .ms-Button :hover {
   border-radius: 10px;
-  background-color: #577f67;
-  color: #fcf7f4;
+  background-color: #577f67 !important;
+  color: #fcf7f4 !important;
   transition: background-color 1s ease, color 1s ease;
   -webkit-transition: background-color 1s ease color 1s ease;
   -moz-transition: background-color 1s ease, color 1s ease;
   -o-transition: background-color 1s ease, color 1s ease;
 }
 
-.root-55:hover .ms-Button-icon {
-  color: #fcf7f4 !important;
-}
-
-.ms-SearchBox {
-  border-radius: 10px;
-  border-color: #fcf7f4;
-  background-color: #fcf7f4;
-}
-
-.ms-SearchBox :hover {
-  border-radius: 10px;
-  border-color: #fcf7f4;
-}
-
-.ms-SearchBox :active {
-  border-radius: 10px;
-  border-color: #fcf7f4;
-}
-
 .ms-Button-icon {
   color: #182c2b;
+}
+
+.root-55:hover .ms-Button-icon {
+  color: #fcf7f4 !important;
 }
 
 .header-buttons > .ms-Button {
@@ -59,8 +35,46 @@
   height: 50px;
 }
 
+.ms-SearchBox {
+  border-radius: 10px !important;
+  border-color: #fcf7f4 !important;
+  background-color: #fcf7f4 !important;
+}
+
+.ms-SearchBox :hover {
+  border-radius: 10px !important;
+  border-color: #fcf7f4 !important;
+}
+
+.ms-SearchBox :active {
+  border-radius: 10px !important;
+  border-color: #fcf7f4 !important;
+}
+
+.ms-SearchBox .is-active {
+  border-radius: 10px !important;
+  border-color: #fcf7f4 !important;
+}
+
+.root-95 {
+  border-radius: 10px !important;
+  border-color: #fcf7f4 !important;
+  color: #fcf7f4 !important;
+}
+
+.iconContainer-89 {
+  border-radius: 10px !important;
+  border-color: #fcf7f4 !important;
+  color: #fcf7f4 !important;
+}
+
 .ms-SearchBox-icon {
   color: #182c2b;
+}
+
+.root-95:hover {
+  border-radius: 10px !important;
+  border-color: #fcf7f4 !important;
 }
 
 .ms-Persona-primaryText {
@@ -69,6 +83,7 @@
 
 .ms-Dialog-main {
   border-radius: 10px;
+  background-color: #fcf7f4;
 }
 
 .ms-List {
@@ -81,6 +96,14 @@
   background-color: #e5e6e0;
 }
 
+table.dataTable.display tbody .even {
+  background-color: #e5e6e0 !important;
+}
+
+table.dataTable.display tbody .odd {
+  background-color: #f8ece0 !important;
+}
+
 table.dataTable.display tbody tr.even {
   background-color: #e5e6e0 !important;
 }
@@ -89,133 +112,19 @@ table.dataTable.display tbody tr.odd {
   background-color: #f8ece0 !important;
 }
 
-table.dataTable.display tbody tr.hover {
-  background-color: #182c2b !important;
-}
-
-table.dataTable.display tbody tr.selected {
-  background-color: #182c2b !important;
-}
-
-table.dataTable.display tbody td.selected {
-  background-color: #182c2b !important;
-}
-
-table.dataTable.display tbody tr.odd.selected {
-  background-color: #182c2b !important;
-}
-
-table.dataTable.display tbody tr.even.selected {
-  background-color: #182c2b !important;
-}
-
-body {
-  background-color: #e5e6e0;
-  min-height: 600px;
-  margin: 0;
-  color: #577f67;
-}
-
-/* Assign grid instructions to our parent grid container */
-.grid-container {
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  grid-template-rows: 55px 1fr;
-  grid-template-areas: "header header" "sidebar main";
-  height: 100vh;
-}
-
-/* Give every child element its grid name */
-.header {
-  grid-area: header;
-  background-color: #f8ece0;
-  padding: 6px 0px 6px 10px;
-  height: 50px;
-  display: flex;
-  flex-direction: row;
-}
-
-.logo {
-  height: 40px;
-}
-
-.sidebar {
-  grid-area: sidebar;
-  background-color: #e5e6e0;
-  padding: 25px;
-  display: flex;
-  flex-direction: column;
-}
-
-.main {
-  grid-area: main;
-  background-color: #fcf7f4;
-  padding-left: 24px;
-  padding-right: 32px;
-  max-width: calc(100vw - 320px);
-  max-height: calc(100vh - 60px);
-  overflow: auto;
-}
-
-.title {
-  padding: 0px 14px 0px 14px;
-  color: #182c2b;
-  margin: 6px 0px 6px 10px;
-  border-left: 1px solid #182c2b;
-}
-
-.btn-primary {
-  background-color: #f1c8b6;
-  color: #182c2b;
-}
-
-.clicked {
-  border-radius: 40px;
-  background-color: rgba(87, 127, 103, 0.3);
-  color: #182c2b;
-}
-
-.scrollable-pane {
-  height: calc(100vh - 200px);
-  border-radius: 5px;
-  overflow-y: scroll;
-  scrollbar-color: #f1c8b6 #f8ece0;
-}
-
-.scrollbar {
-  background-color: #fcf7f4;
-}
-
-.sidebar-buttons {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.card {
-  padding: 28px;
-  margin-top: 28px;
-  background-color: #e5e6e0;
-  border-radius: 20px;
-}
-
 .leaflet {
   margin-top: 28px;
   border-radius: 20px;
 }
 
-.leaflet-icon {
-  color: #577f67;
-}
-
 .leaflet-popup-content-wrapper {
-  background-color: #577f67;
-  color: #fcf7f4;
+  background-color: #577f67 !important;
+  color: #fcf7f4 !important;
 }
 
 .leaflet-popup-tip {
-  background-color: #577f67;
-  color: #fcf7f4;
+  background-color: #577f67 !important;
+  color: #fcf7f4 !important;
 }
 
 .info-title {
@@ -253,4 +162,103 @@ body {
 .info-details-item {
   font-size: 1em;
   color: rgba(24, 44, 43, 0.8);
+}
+
+body {
+  background-color: #e5e6e0;
+  min-height: 600px;
+  margin: 0;
+  color: #577f67;
+}
+
+/* Assign grid instructions to our parent grid container */
+.grid-container {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  grid-template-rows: 55px 1fr;
+  grid-template-areas: "header header" "sidebar main";
+  height: 100vh;
+}
+
+/* Give every child element its grid name */
+.header {
+  grid-area: header;
+  background-color: #f8ece0;
+  padding: 6px 0px 6px 10px;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+}
+
+.header-buttons {
+  background-color: #f8ece0;
+}
+
+.logo {
+  height: 40px;
+}
+
+.sidebar {
+  grid-area: sidebar;
+  background-color: #e5e6e0;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  grid-area: main;
+  background-color: #fcf7f4;
+  padding-left: 24px;
+  padding-right: 32px;
+  max-width: calc(100vw - 320px);
+  max-height: calc(100vh - 60px);
+  overflow: auto;
+}
+
+.title {
+  padding: 0px 14px 0px 14px;
+  color: #182c2b;
+  margin: 6px 0px 6px 10px;
+  border-left: 1px solid #182c2b;
+}
+
+.btn-primary {
+  background-color: #f1c8b6;
+  color: #182c2b;
+}
+
+.sidebar-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  width: 100%;
+}
+
+.card {
+  padding: 28px;
+  margin-top: 28px;
+  background-color: #e5e6e0;
+  border-radius: 20px;
+}
+
+/* Works on Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #e5e6e0 #fcf7f4;
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #fcf7f4;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #e5e6e0;
+  border-radius: 20px;
+  border: 3px solid #e5e6e0;
 }

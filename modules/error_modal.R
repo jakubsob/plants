@@ -1,6 +1,4 @@
 box::use(
-  promises[...],
-  future[...],
   shiny[...],
   shiny.fluent[...],
   shiny.react[...],
@@ -22,7 +20,6 @@ server <- function(id, open) {
     ns <- session$ns
     
     output$modal <- renderReact({
-      browser()
       Modal(
         isOpen = open(), 
         isBlocking = FALSE,

@@ -42,11 +42,6 @@ ui <- function() {
           href = route_link("map")
         ),
         CommandBarButton.shinyInput(
-          "table",
-          text = "Table",
-          iconProps = list(iconName = "Table")
-        ),
-        CommandBarButton.shinyInput(
           "upload",
           text = "Upload",
           iconProps = list(iconName = "Upload")

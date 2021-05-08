@@ -2,6 +2,8 @@
 @import "colors";
 @import "ms";
 @import "datatable";
+@import "leaflet";
+@import "info";
 
 body {
   background-color: $color-secondary-3;
@@ -29,6 +31,10 @@ body {
   height: 50px;
   display: flex;
   flex-direction: row;
+}
+
+.header-buttons {
+  background-color: $color-secondary-4;
 }
 
 .logo {
@@ -65,28 +71,29 @@ body {
   color: $color-secondary-1;
 }
 
-.clicked {
-  border-radius: 40px;
-  background-color: rgba($color-primary-1, 0.3);
-  color: $color-secondary-1;
-}
+// .clicked {
+//   border-radius: 40px;
+//   background-color: rgba($color-primary-1, 0.3);
+//   color: $color-secondary-1;
+// }
 
-.scrollable-pane {
-  height: calc(100vh - 200px);
-  // border-bottom: 3px solid $color-secondary-4;
-  // border-top: 3px solid $color-secondary-4;
-  border-radius: 5px;
-  overflow-y: scroll;
-  scrollbar-color: $color-primary-2 $color-secondary-4;
-}
+// .scrollable-pane {
+//   height: calc(100vh - 200px);
+//   // border-bottom: 3px solid $color-secondary-4;
+//   // border-top: 3px solid $color-secondary-4;
+//   border-radius: 5px;
+//   overflow-y: scroll;
+//   scrollbar-color: $color-primary-2 $color-secondary-4;
+// }
 
-.scrollbar {
-  background-color: $color-primary-3;
-}
+// .scrollbar {
+//   background-color: $color-primary-3;
+// }
 
 .sidebar-buttons {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 28px;
   width: 100%;
 }
 
@@ -97,58 +104,23 @@ body {
   border-radius: 20px;
 }
 
-.leaflet {
-  margin-top: 28px;
+/* Works on Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: $color-secondary-3 $color-primary-3;
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: $color-primary-3;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: $color-secondary-3;
   border-radius: 20px;
-}
-
-.leaflet-icon {
-  color: $color-primary-1;
-}
-
-.leaflet-popup-content-wrapper {
-  background-color: $color-primary-1;
-  color: $color-primary-3;
-}
-
-.leaflet-popup-tip {
-  background-color: $color-primary-1;
-  color: $color-primary-3;
-}
-
-.info-title {
-  display: flex;
-}
-
-.info-img {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  overflow: hidden;
-  border-radius: 50%;
-}
-
-.info-img-container {
-  width: 200px;
-}
-
-.info-details-container {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  color: $color-secondary-1;
-  padding: 0px 14px 0px 14px;
-  margin: 6px 0px 6px 10px;
-  border-left: 1px solid $color-secondary-1;
-}
-
-.info-details-title {
-  font-size: 2em;
-  color: $color-secondary-1;
-}
-
-.info-details-item {
-  font-size: 1em;
-  color: rgba($color-secondary-1, 0.8);
+  border: 3px solid $color-secondary-3;
 }

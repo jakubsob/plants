@@ -1,0 +1,14 @@
+name: plants
+title: plants
+username:
+account: jakub-sobolewski
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4100891
+bundleId: 4574941
+url: https://jakub-sobolewski.shinyapps.io/plants/
+when: 1620499214.02741
+lastSyncTime: 1620499214.02742
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .Rprofile

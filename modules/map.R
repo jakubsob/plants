@@ -6,6 +6,7 @@ box::use(
   dplyr[...],
   purrr[...],
   glue[...],
+  owmr[...],
   ui_utils = ./ui_utils[card]
 )
 box::reload(ui_utils)
@@ -13,10 +14,7 @@ box::reload(ui_utils)
 #' @export
 ui <- function(id) {
   ns <- NS(id)
-  tagList(
-    leaflet::leafletOutput(ns("map"), height = "600px"),
-    reactOutput(ns("info"))
-  )
+  reactOutput(ns("info"))
 }
 
 #' @export
@@ -26,34 +24,35 @@ server <- function(map_id) {
     data_manager <- session$userData$data_manager
     selected <- session$userData$selected
     
-    output$map <- leaflet::renderLeaflet({
-      req(
-        length(selected()) == 1,
-        data_manager()$get_plants()[[selected()]]
-      )
+    output$info <- renderReact({
+      if (length(selected()) != 1) {
+        card <- ui_utils$card("Empty", "Select a plant from sidebar menu.", style = "height: 600px;")
+        return(card)
+      }
       
-      plant <- data_manager()$get_plants()[[selected()]]
-      # plant <- data_manager$get_plants()[[1]]
+      plant <- data_manager()$get(selected())
+      tagList(
+        leafletOutput(ns("map"), height = "600px"),
+        ui_utils$card(
+          "Native",
+          glue_collapse(plant$distributions, sep = ", ")
+        )
+      )
+    })
+    
+    output$map <- renderLeaflet({
+      req(!data_manager()$empty())
+      
+      plant <- data_manager()$get(selected())
       native <- region_to_country(plant$distributions)
       countries <- maps::world.cities %>%
         filter(capital == 1, country.etc %in% native)
-
-      # plant_icon <- makeIcon(
-      #   iconUrl = plant$image_url,
-      #   iconWidth = 38,
-      #   iconHeight = 95,
-      #   iconAnchorX = 22,
-      #   iconAnchorY = 94,
-      #   className = "info-img"
-      # )
-      #
-      icon <- makeIcon("www/plant.png", "www/plant-24@2x.png", 24, 24, className = "leaflet-icon")
-
+      icon <- makeIcon("www/plant.png", "www/plant-32@2x.png", 32, 32)
+      
       countries %>%
         select(country = country.etc, lat, lng = long) %>%
         leaflet() %>%
         addProviderTiles(providers$CartoDB.Positron) %>%
-        addMiniMap(tiles = providers$CartoDB.Positron, toggleDisplay = TRUE) %>%
         addMarkers(
           lng = ~ lng,
           lat = ~ lat,
@@ -64,41 +63,19 @@ server <- function(map_id) {
     
     observeEvent(input$map_marker_click, {
       click <- input$map_marker_click
-      if (is.null(click))
-        return()
+      if (is.null(click)) return()
       text <- paste("Lattitude ", click$lat, "Longtitude ", click$lng, "\nWheather:")
-      # click <- list(lat = -15.78, lng = -47.91)
-      owm_data <- owmr::get_current(lon = click$lng, lat = click$lat, units = "metric")
-      proxy <- leaflet::leafletProxy("map", session)
-      proxy %>% leaflet::clearPopups()
-      
-      proxy %>% addPopups(
-        lng = click$lng,
-        lat = click$lat, 
-        make_whether_prompt(owm_data)
-      )
-      # proxy %>% owmr::add_weather(
-      #   data = owm_data,
-      #   lng = click$lng,
-      #   lat = click$lat,
-      #   template = "<b>{{name}}</b>, {{temp}}°C",
-      #   icon = owm_data$weather$icon
-      # )
+      owm_data <- get_current(lon = click$lng, lat = click$lat, units = "metric")
+      proxy <- leafletProxy("map", session)
+      proxy %>% 
+        clearPopups() %>% 
+        addPopups(
+          lng = click$lng,
+          lat = click$lat, 
+          make_whether_prompt(owm_data)
+        )
     })
     
-    output$info <- renderReact({
-      req(
-        length(selected()) == 1
-        # data_manager()$get_plants()[[selected()]]
-      )
-      
-      plant <- data_manager()$get_plants()[[selected()]]
-      
-      ui_utils$card(
-        "Native",
-        glue_collapse(plant$distributions, sep = ", ")
-      )
-    })
   })
 }
 
@@ -112,7 +89,6 @@ region_to_country <- function(country) {
 }
 
 make_whether_prompt <- function(owm_data) {
-  
   glue("
 {icon(leaflet::icons(owmr::get_icon_url(owm_data$weather$icon)))}
 <b>{stringr::str_to_sentence(owm_data$weather$description)}</b></br>
@@ -120,5 +96,4 @@ make_whether_prompt <- function(owm_data) {
 <b>Humidity:</b> {owm_data$main$humidity}</br>
 <b>Wind speed:</b> {owm_data$wind$speed}</br>
 ")
-  
 }

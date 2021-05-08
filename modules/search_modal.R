@@ -1,6 +1,4 @@
 box::use(
-  promises[...],
-  future[...],
   shiny[...],
   shiny.fluent[...],
   shiny.react[...],
@@ -36,6 +34,7 @@ server <- function(id, plants) {
         searchResult(result)
       },
       error = function(e) {
+        print(e)
         searchResult(NULL)
       })
     })

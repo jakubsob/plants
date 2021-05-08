@@ -1,0 +1,14 @@
+.leaflet {
+  margin-top: 28px;
+  border-radius: 20px;
+}
+
+.leaflet-popup-content-wrapper {
+  background-color: $color-primary-1 !important;
+  color: $color-primary-3 !important;
+}
+
+.leaflet-popup-tip {
+  background-color: $color-primary-1 !important;
+  color: $color-primary-3 !important;
+}
