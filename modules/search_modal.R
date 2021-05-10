@@ -34,7 +34,6 @@ server <- function(id, plants) {
         searchResult(result)
       },
       error = function(e) {
-        print(e)
         searchResult(NULL)
       })
     })
@@ -48,7 +47,7 @@ server <- function(id, plants) {
           h1("Search for your plant"),
           SearchBox.shinyInput(ns("search"), placeholder = "Search plant by name"),
           Separator(),
-          DTOutput(ns("table")),
+          DTOutput(ns("table"), height = "100%"),
           Separator(),
           textOutput(ns("selected")),
           Stack(

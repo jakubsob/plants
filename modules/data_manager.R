@@ -1,5 +1,73 @@
+box::use(
+  R6[...],
+  dplyr[...],
+  DBI[...],
+  RSQLite[...],
+  glue[...],
+  shiny[...],
+  purrr[...]
+)
+
+#' @export
 DataManager <- R6Class(
   "DataManager",
+  public = list(
+    initialize = function(con) {
+      private$con <- tbl(con, "plants")
+      
+      private$plants <- list()
+      private$reactiveDep <- function(x) NULL
+    },
+    
+    reactive = function() {
+      if (is.null(private$reactiveExpr)) {
+        private$reactiveDep <- reactiveVal(0)
+        private$reactiveExpr <- reactive({
+          private$reactiveDep()
+          self
+        })
+      }
+      private$reactiveExpr
+    },
+    
+    search = function(query) {
+      query <- glue("%{query}%")
+      result <- private$con %>% 
+        filter(
+          scientific_name %like% query |
+            genus %like% query |
+            common_name %like% query
+        ) %>% 
+        collect()
+    },
+    
+    add = function(id) {
+      id <- id[!id %in% names(private$plants)]
+      walk(id, function(i) {
+        private$plants[[as.character(i)]] <- private$con %>%
+          filter(id == i) %>%
+          collect() %>%
+          private$clean_plant() 
+      })
+      private$invalidate()
+    },
+    
+    remove = function(id) {
+      if (length(id) != 1) stop("Can only remove one element at a time")
+      private$plants[[id]] <- NULL
+      private$invalidate()
+    },
+    
+    get = function(id = NULL) {
+      if (is.null(id)) return(private$plants)
+      if (length(id) != 1) stop("Can only retrieve one element")
+      private$plants[[id]] 
+    },
+    
+    empty = function() {
+      length(private$plants) == 0
+    }
+  ),
   private = list(
     con = NULL,
     plants = NULL,
@@ -76,64 +144,6 @@ DataManager <- R6Class(
         p[1:10],
         new_p
       )
-    }
-  ),
-  public = list(
-    initialize = function(db) {
-      con <- DBI::dbConnect(RSQLite::SQLite(), db)
-      private$con <- tbl(con, "plants")
-      
-      private$plants <- list()
-      private$reactiveDep <- function(x) NULL
-    },
-    
-    reactive = function() {
-      if (is.null(private$reactiveExpr)) {
-        private$reactiveDep <- reactiveVal(0)
-        private$reactiveExpr <- reactive({
-          private$reactiveDep()
-          self
-        })
-      }
-      private$reactiveExpr
-    },
-    
-    search = function(query) {
-      query <- glue("%{query}%")
-      result <- private$con %>% 
-        filter(
-          scientific_name %like% query |
-          genus %like% query |
-          common_name %like% query
-        ) %>% 
-        collect()
-    },
-    
-    add = function(id) {
-      id <- id[!id %in% names(private$plants)]
-      walk(id, function(i) {
-        private$plants[[as.character(i)]] <- private$con %>%
-          filter(id == i) %>%
-          collect() %>%
-          private$clean_plant() 
-      })
-      private$invalidate()
-    },
-    
-    remove = function(id) {
-      if (length(id) != 1) stop("Can only remove one element at a time")
-      private$plants[[id]] <- NULL
-      private$invalidate()
-    },
-    
-    get = function(id = NULL) {
-      if (is.null(id)) return(private$plants)
-      if (length(id) != 1) stop("Can only retrieve one element")
-      private$plants[[id]] 
-    },
-    
-    empty = function() {
-      length(private$plants) == 0
     }
   )
 )

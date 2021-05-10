@@ -7,9 +7,10 @@ box::use(
   purrr[...],
   glue[...],
   owmr[...],
+  promises[...],
+  future[...],
   ui_utils = ./ui_utils[card]
 )
-box::reload(ui_utils)
 
 #' @export
 ui <- function(id) {
@@ -25,11 +26,8 @@ server <- function(map_id) {
     selected <- session$userData$selected
     
     output$info <- renderReact({
-      if (length(selected()) != 1) {
-        card <- ui_utils$card("Empty", "Select a plant from sidebar menu.", style = "height: 600px;")
-        return(card)
-      }
-      
+      req(!data_manager()$empty())
+      if (length(selected()) != 1) return(empty_info_card())
       plant <- data_manager()$get(selected())
       tagList(
         leafletOutput(ns("map"), height = "600px"),
@@ -64,19 +62,26 @@ server <- function(map_id) {
     observeEvent(input$map_marker_click, {
       click <- input$map_marker_click
       if (is.null(click)) return()
-      text <- paste("Lattitude ", click$lat, "Longtitude ", click$lng, "\nWheather:")
-      owm_data <- get_current(lon = click$lng, lat = click$lat, units = "metric")
       proxy <- leafletProxy("map", session)
-      proxy %>% 
-        clearPopups() %>% 
+      proxy %>% clearPopups()
+      
+      future_promise({
+        get_current(lon = click$lng, lat = click$lat, units = "metric") %>% 
+          make_whether_prompt()
+      }) %...>%
         addPopups(
+          map = proxy,
           lng = click$lng,
           lat = click$lat, 
-          make_whether_prompt(owm_data)
+          popup = .
         )
     })
     
   })
+}
+
+empty_info_card <- function() {
+  ui_utils$card("Empty", "Select a plant from sidebar menu.", style = "height: 600px;")
 }
 
 region_to_country <- function(country) {

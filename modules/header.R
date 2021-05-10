@@ -49,6 +49,10 @@ ui <- function() {
         CommandBarButton.shinyInput(
           "download",
           text = "Download",
+          class = "shiny-download-link",
+          href = "",
+          target = "_blank",
+          download = NA,
           iconProps = list(iconName = "Download")
         )
       )

@@ -5,9 +5,9 @@ box::use(
   dplyr[...],
   purrr[...],
   glue[...],
+  stringr[str_to_title],
   ui_utils = ./ui_utils[card]
 )
-box::reload(ui_utils)
 
 #' @export
 ui <- function(id) {
@@ -26,10 +26,7 @@ server <- function(info_id) {
     
     output$info <- renderReact({
       req(!data_manager()$empty())
-      if (length(selected()) != 1) {
-        card <- ui_utils$card("Empty", "Select a plant from sidebar menu.")
-        return(card)
-      }
+      if (length(selected()) != 1) return(empty_info_card())
       plant <- data_manager()$get(selected())
       
       tagList(
@@ -38,15 +35,15 @@ server <- function(info_id) {
           make_title(plant)
         ),
         ui_utils$card(
-          "Info",
+          strong("Info"),
           make_info_list(plant)
         ),
         ui_utils$card(
-          "Synonyms",
+          strong("Synonyms"),
           glue_collapse(plant$synonyms, sep = ", ")
         ),
         ui_utils$card(
-          "Common names",
+          strong("Common names"),
           glue_collapse(plant$common_names, sep = ", ")
         )
       )
@@ -54,12 +51,16 @@ server <- function(info_id) {
   })
 }
 
+empty_info_card <- function() {
+  ui_utils$card("Empty", "Select a plant from sidebar menu.")
+}
+
 make_title <- function(plant) {
   div(
     class = "info-title",
     div(
       style = "info-image-container",
-      img(class = "info-img", src = plant$image_url)
+      img(class = "info-img", src = plant$image_url, alt = "No image available")
     ),
     div(
       class = "info-details-container",
@@ -82,19 +83,18 @@ make_items <- function(items) {
 
 key_to_word <- function(key) {
   key <- strsplit(key, "_")[[1]] %>% 
-    stringr::str_to_title() %>% 
-    glue::glue_collapse(sep = " ")
+    str_to_title() %>% 
+    glue_collapse(sep = " ")
 }
 
 make_info_list <- function(plant, groups = c("foliage", "flower", "fruit", "growth", "edible", "planting", "links")) {
-  # plant <- data_manager$get()[[1]]
   items <- plant[groups] %>% 
     map(function(x) keep(x, ~ !is.na(.x))) %>% 
     compact()
   groups <- names(items)
   counts <- unname(map_int(items, length))
   starts <- cumsum(counts) - counts
-  items <- purrr::flatten(items) %>% make_items() %>% unname()
+  items <- flatten(items) %>% make_items() %>% unname()
   GroupedList(
     items = items,
     groups = pmap(
@@ -102,13 +102,14 @@ make_info_list <- function(plant, groups = c("foliage", "flower", "fruit", "grow
       function(name, start, length, count) {
         list(
           key = name,
-          name = stringr::str_to_title(name),
+          name = str_to_title(name),
           startIndex = start,
           count = count,
           isCollapsed = TRUE
         )
       }
-    ) %>% unname(),
+    ) %>% 
+      unname(),
     selectionMode = 0,
     onRenderCell = JS("(depth, item) => 
       React.createElement('span', { style: { paddingLeft: 49 } }, item)")

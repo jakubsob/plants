@@ -1,7 +1,7 @@
 library(dplyr)
 library(DBI)
 library(RSQLite)
-plants <- read.csv2("~/Downloads/species.csv", sep = "\t")
+# plants <- read.csv2("~/Downloads/species.csv", sep = "\t")
 
 clean_logical <- function(x) {
   if ("false" %in% x || "true" %in% x) {

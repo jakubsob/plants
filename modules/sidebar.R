@@ -9,35 +9,9 @@ box::use(
   DT[...]
 )
 
-scrollable_personas <- function(personas, ns) {
-  purrr::map(personas, function(p) {
-    tagList(
-      div(
-        id = p$id,
-        class = "clickable-persona",
-        style = "cursor:pointer",
-        Persona(
-          imageUrl = p$imageUrl,
-          primaryText = p$primaryText,
-          secondaryText = p$secondaryText
-        )
-      ),
-      Separator()
-    )
-  })
-}
-
-# ScrollablePersonas <- function(id, personas) {
-#   div(
-#     class = "scrollable-pane",
-#     
-#   )
-# }
-
 #' @export
 ui <- function(id) {
-  ns <- NS(id)
-  # reactOutput(ns("scrollable"))
+  ns <- NS(id) 
   tagList(
     DTOutput(ns("scrollable"), height = "100%")
   )
@@ -49,24 +23,6 @@ server <- function(id) {
     ns <- session$ns
     ids <- reactiveVal(NULL)
     data_manager <- session$userData$data_manager
-    
-    # output$scrollable <- renderReact({
-    #   # scrollable <- items() %>% 
-    #   #   scrollable_personas(ns)
-    #   
-    #   tagList(
-    #     # div(
-    #     #   class = "scrollable-pane",
-    #     #   scrollable
-    #     # ),
-    #     Stack(
-    #       horizontal = TRUE,
-    #       tokens = list(childrenGap = 20),
-    #       ActionButton.shinyInput(ns("select_all"), text = "Select all", class = "btn-primary"),
-    #       ActionButton.shinyInput(ns("clear_all"), text = "Clear selection", className = "btn-primary")
-    #     )
-    #   )
-    # })
 
     output$scrollable <- renderDT({
       items <- data_manager()$get() %>% 

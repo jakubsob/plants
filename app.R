@@ -1,52 +1,55 @@
-library(shiny)
-library(shiny.fluent)
-library(shiny.react)
-library(shiny.router)
-library(shinyjs)
-library(sass)
-library(R6)
-library(owmr)
-library(purrr)
-library(DT)
-library(glue)
-library(dplyr)
-library(dbplyr)
-library(leaflet)
-
-options(box.path = getwd())
+# library(shiny)
+# library(shiny.fluent)
+# library(shiny.react)
+# library(shiny.router)
+# library(shinyjs)
+# library(sass)
+# library(R6)
+# library(owmr)
+# library(purrr)
+# library(DT)
+# library(glue)
+# library(dplyr)
+# library(dbplyr)
+# library(leaflet)
+# library(promises)
+# library(future)
+# library(showtext)
+# library(DBI)
+# library(RSQLite)
+# plan(multisession)
+# sysfonts::font_add_google("Montserrat", "Montserrat")
+# showtext::showtext_auto()
+# options(box.path = getwd())
 
 box::use(
+  modules/data_manager,
   modules/header,
   modules/sidebar,
   modules/search_modal,
   modules/home,
   modules/map,
   modules/info,
+  modules/download,
   modules/error_modal
 )
+box::reload(data_manager)
 box::reload(header)
 box::reload(sidebar)
 box::reload(map)
 box::reload(info)
 box::reload(search_modal)
 box::reload(home)
+box::reload(download)
 
 router <- make_router(
-  route("home", home$ui("home")),
+  route("home", home$ui("home"), home$server),
   route("info", info$ui("info"), info$server),
   route("map", map$ui("map"), map$server)
 )
 
 addResourcePath("www", "./www")
 sass(sass_file("styles/main.scss"), output = "www/style.css", cache = FALSE)
-source("modules/data_manager.R")
-
-# data_manager <- DataManager$new("data/plants.sqlite")
-# res <- data_manager$search("syngonium")
-# data_manager$add("295307")
-# data_manager$add("101119")
-# data_manager$add("186087")
-# data_manager$get()
 
 ui <- fluentPage(
   tags$head(
@@ -88,12 +91,13 @@ ui <- fluentPage(
 
 server <- function(input, output, session) {
 
+  con <- dbConnect(SQLite(), "data/plants.sqlite")
+  session$userData$data_manager <- data_manager$DataManager$new(con)$reactive()
   session$userData$search_is_open <- reactiveVal(FALSE)
-  session$userData$data_manager <- DataManager$new("data/plants.sqlite")$reactive()
-  
   session$userData$selected <- sidebar$server("sidebar")
   ids <- search_modal$server("search_modal", plants)
-  router$server(input, output, session, info_id = "info", map_id = "map")
+  download$server()
+  router$server(input, output, session, info_id = "info", map_id = "map", home_id = "home")
   
   observeEvent(ids(), {
     session$userData$data_manager()$add(ids())
@@ -112,6 +116,11 @@ server <- function(input, output, session) {
     ids <- session$userData$data_manager()$search("syngonium")$id[1:15]
     session$userData$data_manager()$add(ids)
   })
+  
+  observeEvent(input$onSessionended, {
+    dbDisconnect(con)
+  })
 }
 
 shinyApp(ui = ui, server = server)
+
