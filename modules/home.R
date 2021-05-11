@@ -19,23 +19,23 @@ ui <- function(id) {
   )
 }
 
-#' @export
-server <- function(home_id) {
-  moduleServer(home_id, function(input, output, session) {
-    ns <- session$ns
-    data_manager <- session$userData$data_manager
-    selected <- session$userData$selected
-  
-    
-  })
-}
-
 home_text <- function() {
-  tagList(
-    "Discover your plants and check weather in their places of origin.",
-    br(),
-    "Search for your plant using Add button in pane on the left.",
-    br(),
-    "Navigate through tabs using menu in the header."
+    
+  div(
+    class = "flex-container",
+    div(
+      class = "flex-child",
+      tagList(
+        "Discover your plants and check weather in their places of origin.",
+        br(),
+        "Search for your plant using Add button in pane on the left.",
+        br(),
+        "Navigate through tabs using menu in the header."
+      )
+    ),
+    div(
+      class = "flex-child",
+      img(src = "www/plant.png", class = "home-img")
+    )
   )
 }

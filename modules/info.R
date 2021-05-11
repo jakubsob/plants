@@ -44,10 +44,13 @@ server <- function(info_id) {
           strong("Synonyms"),
           glue_collapse(plant$synonyms, sep = ", ")
         ),
-        ui_utils$card(strong("Timeline"), plotOutput(ns("timeline_plot"))),
         ui_utils$card(
           strong("Common names"),
           glue_collapse(plant$common_names, sep = ", ")
+        ),
+        ui_utils$card(
+          strong("Publication year timeline"), 
+          plotOutput(ns("timeline_plot"))
         )
       )
     })
