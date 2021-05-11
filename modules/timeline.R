@@ -3,31 +3,40 @@ box::use(
   purrr[...],
   tibble[...],
   ggplot2[...],
-  ggimage[...],
   ggrepel[...]
 )
 
 #' @export
-make_timeline <- function(plants, bg_color = "#e5e6e0", color = "#182c2b") {
+make_timeline <- function(plants,
+                          selected = NULL,
+                          bg_color = "#e5e6e0",
+                          color = "#182c2b",
+                          bg_color_selected = "#577f67",
+                          color_selected = "#fcf7f4") {
   d <- plants %>% 
-    map(`[`, c("year", "scientific_name", "image_url")) %>% 
+    map(`[`, c("id", "year", "scientific_name")) %>% 
     unname() %>% 
     transpose() %>% 
     as_tibble() %>% 
     mutate_all(unlist) %>% 
-    mutate(
-      color = color,
-      text_pos = rep_len(c(1, -1), nrow(.))
-    )
+    {
+      if (is.null(selected)) {
+        mutate(., color = "ns", bg_color = "ns")
+      } else {
+        mutate(
+          .,
+          color = ifelse(id == selected, "s", "ns"),
+          bg_color = ifelse(id == selected, "s", "ns")
+        )
+      }
+    }
   
   d %>% 
     ggplot(aes(x = year, y = 0, colour = color)) +
     geom_hline(yintercept = 0, colour = color) +
-    geom_point(size = 3) +
+    geom_point(size = 3, color = color) +
     geom_label_repel(
-      aes(y = 0, label = scientific_name),
-      color = color,
-      fill = bg_color,
+      aes(y = 0, label = scientific_name, fill = bg_color, color = color, segment.color = "black"),
       size = 5,
       direction = "y",
       min.segment.length = 0,
@@ -35,7 +44,8 @@ make_timeline <- function(plants, bg_color = "#e5e6e0", color = "#182c2b") {
     ) +
     coord_fixed() +
     scale_y_continuous(limit = c(-0.001, .1)) +
-    scale_colour_manual(values = color) +
+    scale_colour_manual(values = c(s = color_selected, ns = color)) +
+    scale_fill_manual(values = c(s = bg_color_selected, ns = bg_color)) +
     scale_x_continuous(expand = c(.3, .3)) +
     theme_classic() +
     theme(

@@ -7,10 +7,8 @@ box::use(
   dplyr[...],
   purrr[...],
   glue[...],
-  ui_utils = ./ui_utils,
-  timeline = ./timeline
+  ui_utils = ./ui_utils
 )
-box::reload(timeline)
 
 #' @export
 ui <- function(id) {
@@ -28,18 +26,6 @@ server <- function(home_id) {
     data_manager <- session$userData$data_manager
     selected <- session$userData$selected
   
-    output$cards <- renderReact({
-      req(!data_manager()$empty())
-      tagList(
-        ui_utils$card(strong("Timeline"), plotOutput(ns("timeline_plot"))),
-        ui_utils$card(strong("Synonyms"), "")
-      )
-    })
-    
-    output$timeline_plot <- renderPlot({
-      req(!data_manager()$empty())
-      timeline$make_timeline(data_manager()$get())
-    }, bg = "transparent")
     
   })
 }

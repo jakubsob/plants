@@ -6,8 +6,10 @@ box::use(
   purrr[...],
   glue[...],
   stringr[str_to_title],
-  ui_utils = ./ui_utils[card]
+  ui_utils = ./ui_utils[card],
+  timeline = ./timeline
 )
+box::reload(timeline)
 
 #' @export
 ui <- function(id) {
@@ -42,12 +44,18 @@ server <- function(info_id) {
           strong("Synonyms"),
           glue_collapse(plant$synonyms, sep = ", ")
         ),
+        ui_utils$card(strong("Timeline"), plotOutput(ns("timeline_plot"))),
         ui_utils$card(
           strong("Common names"),
           glue_collapse(plant$common_names, sep = ", ")
         )
       )
     })
+    
+    output$timeline_plot <- renderPlot({
+      req(!data_manager()$empty())
+      timeline$make_timeline(data_manager()$get(), selected())
+    }, bg = "transparent")
   })
 }
 
