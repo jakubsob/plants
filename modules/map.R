@@ -24,6 +24,7 @@ server <- function(map_id) {
     ns <- session$ns
     data_manager <- session$userData$data_manager
     selected <- session$userData$selected
+    icon <- makeIcon("www/plant.png", iconWidth = 32, iconHeight = 32)
     
     output$info <- renderReact({
       req(!data_manager()$empty())
@@ -45,7 +46,6 @@ server <- function(map_id) {
       native <- region_to_country(plant$distributions)
       countries <- maps::world.cities %>%
         filter(capital == 1, country.etc %in% native)
-      icon <- makeIcon("www/plant.png", "www/plant-32@2x.png", 32, 32)
       
       countries %>%
         select(country = country.etc, lat, lng = long) %>%
@@ -95,10 +95,10 @@ region_to_country <- function(country) {
 
 make_whether_prompt <- function(owm_data) {
   glue("
-{icon(leaflet::icons(owmr::get_icon_url(owm_data$weather$icon)))}
-<b>{stringr::str_to_sentence(owm_data$weather$description)}</b></br>
-<b>Temp:</b> {owm_data$main$temp} °C</br>
-<b>Humidity:</b> {owm_data$main$humidity}</br>
-<b>Wind speed:</b> {owm_data$wind$speed}</br>
-")
+    {icon(leaflet::icons(owmr::get_icon_url(owm_data$weather$icon)))}
+    <b>{stringr::str_to_sentence(owm_data$weather$description)}</b></br>
+    <b>Temp:</b> {owm_data$main$temp} °C</br>
+    <b>Humidity:</b> {owm_data$main$humidity}</br>
+    <b>Wind speed:</b> {owm_data$wind$speed}</br>
+  ")
 }
