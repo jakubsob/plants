@@ -93,8 +93,9 @@ ui <- fluentPage(
           )
         ),
         sidebar$ui("sidebar"),
-        Separator("dev"),
-        ActionButton.shinyInput("add_plant", text = "add")
+        if (config::is_active("test")) {
+          ActionButton.shinyInput("add_plant", text = "add")
+        } else NULL
       ),
       div(class = "main", router$ui)
     )
