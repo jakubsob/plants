@@ -12,9 +12,9 @@ box::use(
 DataManager <- R6Class(
   "DataManager",
   public = list(
-    initialize = function(con) {
-      private$con <- tbl(con, "plants")
-      
+    initialize = function(pool) {
+      private$tbl <- tbl(pool, "plants")
+
       private$plants <- list()
       private$reactiveDep <- function(x) NULL
     },
@@ -32,7 +32,7 @@ DataManager <- R6Class(
     
     search = function(query) {
       query <- glue("%{query}%")
-      result <- private$con %>% 
+      result <- private$tbl %>% 
         filter(
           scientific_name %like% query |
             genus %like% query |
@@ -44,7 +44,7 @@ DataManager <- R6Class(
     add = function(id) {
       id <- id[!id %in% names(private$plants)]
       walk(id, function(i) {
-        private$plants[[as.character(i)]] <- private$con %>%
+        private$plants[[as.character(i)]] <- private$tbl %>%
           filter(id == i) %>%
           collect() %>%
           private$clean_plant() 
@@ -69,7 +69,7 @@ DataManager <- R6Class(
     }
   ),
   private = list(
-    con = NULL,
+    tbl = NULL,
     plants = NULL,
     reactiveDep = NULL,
     reactiveExpr = NULL,
@@ -79,8 +79,7 @@ DataManager <- R6Class(
       invisible()
     },
     count = 0,
-    clean_plant = function(plant) {
-      p <- plant[, -1]
+    clean_plant = function(p) {
       split <- function(x) {
         res <- strsplit(x, ",")[[1]]
         if (length(res) == 0) return(NA)
@@ -141,7 +140,7 @@ DataManager <- R6Class(
         )
       )
       c(
-        p[1:10],
+        p[1:11],
         new_p
       )
     }

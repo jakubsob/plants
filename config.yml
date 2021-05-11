@@ -1,0 +1,8 @@
+default:
+  db_loc: "data/plants.sqlite"
+  
+test:
+  inherits: default
+  
+production:
+  inherits: default
