@@ -17,7 +17,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, plants) {
+server <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     
