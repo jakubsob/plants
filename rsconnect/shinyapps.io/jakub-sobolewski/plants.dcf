@@ -5,10 +5,10 @@ account: jakub-sobolewski
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4101508
-bundleId: 4575426
+bundleId: 4591899
 url: https://jakub-sobolewski.shinyapps.io/plants/
-when: 1620513811.82896
-lastSyncTime: 1620513811.82897
+when: 1620857316.60923
+lastSyncTime: 1620857316.60925
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: .Rprofile
