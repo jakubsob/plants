@@ -32,7 +32,7 @@ DataManager <- R6Class(
     
     search = function(query) {
       query <- glue("%{query}%")
-      result <- private$tbl %>% 
+      private$tbl %>% 
         filter(
           scientific_name %like% query |
             genus %like% query |
@@ -42,6 +42,10 @@ DataManager <- R6Class(
     },
     
     add = function(id) {
+      if (length(id) == 0) {
+        stop("Provide id of length > 0")
+      }
+      private$check_id(id)
       id <- id[!id %in% names(private$plants)]
       walk(id, function(i) {
         private$plants[[as.character(i)]] <- private$tbl %>%
@@ -54,14 +58,15 @@ DataManager <- R6Class(
     
     remove = function(id) {
       if (length(id) != 1) stop("Can only remove one element at a time")
-      private$plants[[id]] <- NULL
+      private$check_id(id)
+      private$plants[[as.character(id)]] <- NULL
       private$invalidate()
     },
     
     get = function(id = NULL) {
       if (is.null(id)) return(private$plants)
       if (length(id) != 1) stop("Can only retrieve one element")
-      private$plants[[id]] 
+      private$plants[[as.character(id)]] 
     },
     
     get_df = function() {
@@ -83,6 +88,11 @@ DataManager <- R6Class(
       invisible()
     },
     count = 0,
+    check_id = function(id) {
+      if (any(!grepl("^[0-9]+$", id))) {
+        stop("id must be a number")
+      }
+    },
     clean_plant = function(p) {
       split <- function(x) {
         res <- strsplit(x, ",")[[1]]
@@ -150,3 +160,7 @@ DataManager <- R6Class(
     }
   )
 )
+
+if (is.null(box::name())) {
+  box::use(./`__tests__`)
+}
