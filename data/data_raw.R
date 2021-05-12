@@ -28,19 +28,3 @@ lapply(plants_clean, function(x) {
 
 con <- dbConnect(SQLite(), "data/plants.sqlite")
 dbWriteTable(con, "plants", plants_clean, overwrite = TRUE)
-
-test_query <- function() {
-  plants <- dplyr::tbl(con, "plants")
-  query <- "rhipsalis"
-  query <- glue::glue("%{query}%")
-  result <- plants %>%
-    dplyr::filter(
-      scientific_name %like% query |
-      genus %like% query |
-      common_name %like% query
-    )
-  result %>% dplyr::show_query()
-  res <- result %>% dplyr::collect()
-  res %>% dplyr::mutate_if(is.character, as.factor) %>% summary()
-  res
-}
