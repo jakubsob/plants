@@ -61,12 +61,6 @@
   border-color: #fcf7f4 !important;
 }
 
-.root-95 {
-  border-radius: 10px !important;
-  border-color: #fcf7f4 !important;
-  color: #fcf7f4 !important;
-}
-
 .iconContainer-89 {
   border-radius: 10px !important;
   border-color: #fcf7f4 !important;
@@ -119,6 +113,24 @@ table.dataTable.display tbody tr.odd {
 
 .dataTables_scrollBody {
   border-bottom: none !important;
+}
+
+tr.selected {
+  background-color: white !important;
+}
+
+td.selected {
+  background-color: white !important;
+}
+
+table.dataTable tr.selected td,
+table.dataTable td.selected {
+  background-color: #ffffff !important;
+}
+
+dataTable tbody tr.selected td {
+  background: white !important;
+  color: black;
 }
 
 .leaflet {
@@ -307,9 +319,11 @@ body {
 
 .shiny-notification {
   position: fixed;
-  top: calc(50%);
-  left: calc(50%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   border-radius: 10px;
   background-color: #577f67;
   color: #fcf7f4;
+  opacity: 1;
 }

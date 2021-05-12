@@ -141,9 +141,11 @@ body {
 
 .shiny-notification {
   position: fixed;
-  top: calc(50%);
-  left: calc(50%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   border-radius: 10px;
   background-color: $color-primary-1;
   color: $color-primary-3;
+  opacity: 1;
 }
