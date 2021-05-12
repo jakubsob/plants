@@ -21,7 +21,7 @@ library(ggrepel)
 library(DBI)
 library(RSQLite)
 library(stringr)
-plan(multisession)
+plan(multicore)
 
 font_add_google("Montserrat", "Montserrat")
 showtext_auto()
@@ -49,7 +49,7 @@ box::reload(download)
 box::reload(upload_modal)
 
 router <- make_router(
-  route("home", home$ui("home")),
+  route("home", home$ui()),
   route("info", info$ui("info"), info$server),
   route("map", map$ui("map"), map$server)
 )
