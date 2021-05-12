@@ -15,7 +15,7 @@ body {
 /* Assign grid instructions to our parent grid container */
 .grid-container {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 300px 1fr;
   grid-template-rows: 55px 1fr;
   grid-template-areas:
     "header header"
@@ -52,9 +52,9 @@ body {
 .main {
   grid-area: main;
   background-color: $color-primary-3;
-  padding-left: 24px;
+  padding-left: 28px;
   padding-right: 32px;
-  max-width: calc(100vw - 320px);
+  max-width: calc(100vw - 300px);
   max-height: calc(100vh - 60px);
   overflow: auto;
 }
@@ -70,25 +70,6 @@ body {
   background-color: $color-primary-2;
   color: $color-secondary-1;
 }
-
-// .clicked {
-//   border-radius: 40px;
-//   background-color: rgba($color-primary-1, 0.3);
-//   color: $color-secondary-1;
-// }
-
-// .scrollable-pane {
-//   height: calc(100vh - 200px);
-//   // border-bottom: 3px solid $color-secondary-4;
-//   // border-top: 3px solid $color-secondary-4;
-//   border-radius: 5px;
-//   overflow-y: scroll;
-//   scrollbar-color: $color-primary-2 $color-secondary-4;
-// }
-
-// .scrollbar {
-//   background-color: $color-primary-3;
-// }
 
 .sidebar-buttons {
   display: flex;
@@ -123,4 +104,46 @@ body {
   background-color: $color-secondary-3;
   border-radius: 20px;
   border: 3px solid $color-secondary-3;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-child {
+  flex: 1;
+}
+
+.flex-push {
+  margin-left: auto;
+  margin-right: 28px;
+}
+
+.home-img {
+  height: 200px;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.form-control {
+  border-radius: 5px;
+  border-color: invisible;
+  background-color: $color-primary-3;
+}
+
+.progress-bar {
+  border-radius: 5px;
+  background-color: $color-secondary-3;
+}
+
+.shiny-notification {
+  position: fixed;
+  top: calc(50%);
+  left: calc(50%);
+  border-radius: 10px;
+  background-color: $color-primary-1;
+  color: $color-primary-3;
 }

@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Montserrat|Playfair+Display&display=swap");
 .ms-Fabric {
   font-family: "Montserrat", sans-serif;
+  color: #182c2b;
 }
 
 .ms-Button {
@@ -24,6 +25,10 @@
 }
 
 .root-55:hover .ms-Button-icon {
+  color: #fcf7f4 !important;
+}
+
+.root-66:hover .ms-Button-icon {
   color: #fcf7f4 !important;
 }
 
@@ -174,7 +179,7 @@ body {
 /* Assign grid instructions to our parent grid container */
 .grid-container {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 300px 1fr;
   grid-template-rows: 55px 1fr;
   grid-template-areas: "header header" "sidebar main";
   height: 100vh;
@@ -209,9 +214,9 @@ body {
 .main {
   grid-area: main;
   background-color: #fcf7f4;
-  padding-left: 24px;
+  padding-left: 28px;
   padding-right: 32px;
-  max-width: calc(100vw - 320px);
+  max-width: calc(100vw - 300px);
   max-height: calc(100vh - 60px);
   overflow: auto;
 }
@@ -261,4 +266,46 @@ body {
   background-color: #e5e6e0;
   border-radius: 20px;
   border: 3px solid #e5e6e0;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-child {
+  flex: 1;
+}
+
+.flex-push {
+  margin-left: auto;
+  margin-right: 28px;
+}
+
+.home-img {
+  height: 200px;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.form-control {
+  border-radius: 5px;
+  border-color: invisible;
+  background-color: #fcf7f4;
+}
+
+.progress-bar {
+  border-radius: 5px;
+  background-color: #e5e6e0;
+}
+
+.shiny-notification {
+  position: fixed;
+  top: calc(50%);
+  left: calc(50%);
+  border-radius: 10px;
+  background-color: #577f67;
+  color: #fcf7f4;
 }

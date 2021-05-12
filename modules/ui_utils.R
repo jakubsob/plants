@@ -6,13 +6,13 @@ box::use(
 )
 
 #' @export
-card <- function(title, content, size = 12, style = "") {
+card <- function(title = NULL, content = NULL, size = 12, style = "") {
   div(
     class = glue("card ms-depth-16 ms-sm{size} ms-xl{size}"),
     style = style,
     Stack(
       tokens = list(childrenGap = 5),
-      Text(variant = "large", title, block = TRUE),
+      if (!is.null(title)) Text(variant = "large", title, block = TRUE),
       content
     )
   )

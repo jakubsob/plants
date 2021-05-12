@@ -36,7 +36,7 @@ box::use(
   modules/map,
   modules/info,
   modules/download,
-  modules/error_modal
+  modules/upload_modal
 )
 box::reload(data_manager)
 box::reload(header)
@@ -46,6 +46,7 @@ box::reload(info)
 box::reload(search_modal)
 box::reload(home)
 box::reload(download)
+box::reload(upload_modal)
 
 router <- make_router(
   route("home", home$ui("home")),
@@ -73,6 +74,7 @@ ui <- fluentPage(
   useShinyjs(),
   tags$body(
     search_modal$ui("search_modal"),
+    upload_modal$ui("upload"),
     div(
       class = "grid-container",
       div(class = "header", header$ui()),
@@ -86,10 +88,21 @@ server <- function(input, output, session) {
 
   session$userData$data_manager <- data_manager$DataManager$new(pool)$reactive()
   session$userData$search_is_open <- reactiveVal(FALSE)
+  session$userData$upload_is_open <- reactiveVal(FALSE)
   session$userData$selected <- sidebar$server("sidebar")
-  ids <- search_modal$server("search_modal")
   router$server(input, output, session, info_id = "info", map_id = "map")
+  download$server(input, output, session)
+  upload_modal$server("upload")
+  ids <- search_modal$server("search_modal")
 
+  observeEvent(input$add, {
+    session$userData$search_is_open(TRUE)
+  })
+  
+  observeEvent(input$upload, {
+    session$userData$upload_is_open(TRUE)
+  })
+  
   observeEvent(ids(), {
     session$userData$data_manager()$add(ids())
   })

@@ -9,7 +9,6 @@ box::use(
   ui_utils = ./ui_utils[card],
   timeline = ./timeline
 )
-box::reload(timeline)
 
 #' @export
 ui <- function(id) {

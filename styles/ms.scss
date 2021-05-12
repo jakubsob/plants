@@ -1,5 +1,6 @@
 .ms-Fabric {
   font-family: "Montserrat", sans-serif;
+  color: $color-secondary-1;
 }
 
 .ms-Button {
@@ -22,6 +23,10 @@
 }
 
 .root-55:hover .ms-Button-icon {
+  color: $color-primary-3 !important;
+}
+
+.root-66:hover .ms-Button-icon {
   color: $color-primary-3 !important;
 }
 

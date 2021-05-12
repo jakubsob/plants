@@ -64,6 +64,10 @@ DataManager <- R6Class(
       private$plants[[id]] 
     },
     
+    get_df = function() {
+      map_dfr(private$plants, `[`, c("id", "scientific_name"))
+    },
+    
     empty = function() {
       length(private$plants) == 0
     }
