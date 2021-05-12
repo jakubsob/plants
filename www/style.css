@@ -117,6 +117,10 @@ table.dataTable.display tbody tr.odd {
   background-color: #f8ece0 !important;
 }
 
+.dataTables_scrollBody {
+  border-bottom: none !important;
+}
+
 .leaflet {
   margin-top: 28px;
   border-radius: 20px;
