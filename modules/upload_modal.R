@@ -2,7 +2,6 @@ box::use(
   shiny[...],
   shiny.fluent[...],
   shiny.react[...],
-  shinymaterial[...],
   dplyr[...],
   purrr[...],
   DT[...],
@@ -24,7 +23,7 @@ server <- function(id) {
     ns <- session$ns
     data_manager <- session$userData$data_manager
     upload_is_open <- session$userData$upload_is_open
-    loaded_data <- reactiveVal()
+    loaded_ids <- reactiveVal()
     
     output$modal <- renderReact(
       Modal(
@@ -56,20 +55,23 @@ server <- function(id) {
     observeEvent(input$add, {
       upload_is_open(FALSE)
       tryCatch(
-        session$userData$data_manager()$add(loaded_data()$id),
+        session$userData$data_manager()$add(loaded_ids()),
         error = function(e) {
-          dm_add_error_notification()
+          data_manager_error_notification()
         }
       )
     })
     
     observeEvent(input$file_input, {
-      tryCatch(
-        loaded_data(read.csv2(input$file_input$datapath)),
-        error = function(e) {
-          error_notification()
-        }
-      )
+      tryCatch({
+        df <- read.csv2(input$file_input$datapath, sep = ";")
+        stopifnot(!any(!grepl("^[0-9]+$", df$id)))
+        loaded_ids(df$id)
+      },
+      error = function(e) {
+        upload_is_open(FALSE)
+        load_error_notification()
+      })
     })
   })
 }
@@ -83,7 +85,7 @@ load_error_notification <- function() {
   showNotification(ui)
 }
 
-dm_add_error_notification <- function() {
+data_manager_error_notification <- function() {
   ui <- tagList(
     strong("Error adding the data"),
     br(),

@@ -87,10 +87,6 @@ server <- function(id) {
           headerCallback = JS(
             "function(thead, data, start, end, display){",
             "  $(thead).remove();",
-            "}"),
-          initComplete = JS(
-            "function(settings, json) {",
-            "  $('body').find('.dataTables_scrollBody').addClass('scrollbar');",
             "}")
         )
       )
