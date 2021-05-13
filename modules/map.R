@@ -65,21 +65,15 @@ server <- function(map_id) {
       proxy <- leafletProxy("map", session)
       proxy %>% clearPopups()
       
-      tryCatch({
-        future_promise({
-          get_current(lon = click$lng, lat = click$lat, units = "metric") %>% 
-            make_whether_prompt()
-        }) %...>%
-          addPopups(
-            map = proxy,
-            lng = click$lng,
-            lat = click$lat, 
-            popup = .
-          )
-      },
-      error = function(e) {
-        error_notification()
-        return(NULL)
+      future_promise({
+        resp <- get_current(lon = click$lng, lat = click$lat, units = "metric")
+        
+        addPopups(
+          map = proxy,
+          lng = click$lng,
+          lat = click$lat, 
+          popup = if (resp$cod == 200) make_whether_prompt(resp) else resp$message
+        ) 
       })
     })
   })
@@ -106,13 +100,4 @@ make_whether_prompt <- function(owm_data) {
     <b>Humidity:</b> {owm_data$main$humidity}</br>
     <b>Wind speed:</b> {owm_data$wind$speed}</br>
   ")
-}
-
-error_notification <- function() {
-  ui <- tagList(
-    strong("Error retrieving weather data"),
-    br(),
-    "Check your credentials limits and internet connection"
-  )
-  showNotification(ui)
 }
